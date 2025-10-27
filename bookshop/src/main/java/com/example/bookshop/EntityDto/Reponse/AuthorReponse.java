@@ -19,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 public class AuthorReponse {
     Long id;
     String name;
+    String savedFileName;
     String gender;
     String description;
     int yob;

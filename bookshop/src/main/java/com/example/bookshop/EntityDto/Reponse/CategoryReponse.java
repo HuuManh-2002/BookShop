@@ -19,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 public class CategoryReponse {
     Long id;
     String name;
+    String savedFileName;
     String description;
     LocalDateTime createdTime;
 

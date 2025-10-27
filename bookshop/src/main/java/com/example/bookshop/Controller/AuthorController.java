@@ -8,15 +8,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.bookshop.EntityDto.Reponse.ApiReponse;
 import com.example.bookshop.EntityDto.Reponse.AuthorReponse;
 import com.example.bookshop.EntityDto.Request.AuthorRequest;
 import com.example.bookshop.EntityDto.Update.AuthorUpdate;
 import com.example.bookshop.Service.AuthorService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/author")
@@ -42,19 +45,24 @@ public class AuthorController {
     }
 
     @PostMapping()
-    public ApiReponse<AuthorReponse> create(@RequestBody AuthorRequest authorRequest) {
+    public ApiReponse<AuthorReponse> create(
+            @RequestPart("authorRequest") @Valid AuthorRequest authorRequest,
+            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile) {
         return ApiReponse.<AuthorReponse>builder()
                 .code(1000)
-                .result(authorService.create(authorRequest))
+                .result(authorService.create(authorRequest, avatarFile))
                 .build();
     }
 
     @PutMapping("/{id}")
-    public ApiReponse<AuthorReponse> update(@PathVariable Long id, @RequestBody AuthorUpdate authorUpdate) {
+    public ApiReponse<AuthorReponse> update(
+            @PathVariable("id") Long id,
+            @RequestPart("authorUpdate") @Valid AuthorUpdate authorUpdate,
+            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile) {
 
         return ApiReponse.<AuthorReponse>builder()
                 .code(1000)
-                .result(authorService.update(authorUpdate, id))
+                .result(authorService.update(authorUpdate, id, avatarFile))
                 .build();
     }
 

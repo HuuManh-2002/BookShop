@@ -1,11 +1,13 @@
 package com.example.bookshop.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.bookshop.Entity.Author;
 import com.example.bookshop.EntityDto.Reponse.AuthorReponse;
@@ -23,6 +25,8 @@ public class AuthorService {
     AuthorRepository authorRepository;
     @Autowired
     AuthorMapper authorMapper;
+    @Autowired
+    FileStorageService fileStorageService;
 
     public List<AuthorReponse> getAll() {
 
@@ -41,29 +45,70 @@ public class AuthorService {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public AuthorReponse create(AuthorRequest authorRequest) {
+    public AuthorReponse create(AuthorRequest authorRequest, MultipartFile avatarFile) {
         Author author = authorMapper.toAuthor(authorRequest);
+        String savedFileName = null;
+
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            try {
+                savedFileName = fileStorageService.saveFile(avatarFile, "image/author");
+            } catch (IOException e) {
+                // Bắt IOException và ném ra AppException
+                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+            }
+        }
+
+        if (savedFileName != null) {
+            author.setSavedFileName(savedFileName);
+        }
+
         authorRepository.save(author);
         return authorMapper.toAuthorReponse(author);
+
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public AuthorReponse update(AuthorUpdate authorUpdate, Long id) {
+    public AuthorReponse update(AuthorUpdate authorUpdate, Long id, MultipartFile avatarFile) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.AUTHOR_NOT_FOUND));
         author.setName(authorUpdate.getName());
         author.setGender(authorUpdate.getGender());
         author.setDescription(authorUpdate.getDescription());
         author.setYob(authorUpdate.getYob());
+        try {
+            fileStorageService.deleteFile(author.getSavedFileName(), "image/author/");
 
+        } catch (IOException e) {
+            throw new AppException(ErrorCode.DETETE_FILE_FAILED);
+        }
+
+        String savedFileName = null;
+
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            try {
+                savedFileName = fileStorageService.saveFile(avatarFile, "image/author/");
+            } catch (IOException e) {
+                // Bắt IOException và ném ra AppException
+                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+            }
+        }
+
+        if (savedFileName != null) {
+            author.setSavedFileName(savedFileName);
+        }
         authorRepository.save(author);
         return authorMapper.toAuthorReponse(author);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public void delete(Long id) {
-        if (!authorRepository.existsById(id)) {
-            throw new AppException(ErrorCode.AUTHOR_NOT_FOUND);
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.AUTHOR_NOT_FOUND));
+        try {
+            fileStorageService.deleteFile(author.getSavedFileName(), "image/author/");
+
+        } catch (IOException e) {
+            throw new AppException(ErrorCode.DETETE_FILE_FAILED);
         }
         authorRepository.deleteById(id);
     }

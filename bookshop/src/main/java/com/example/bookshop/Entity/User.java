@@ -37,9 +37,9 @@ public class User {
     String lastName;
 
     @Column(unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
-    String username;
-    String password;
     String email;
+    String savedFileName;
+    String password;
     String phoneNumber;
     LocalDate dob;
     String gender;

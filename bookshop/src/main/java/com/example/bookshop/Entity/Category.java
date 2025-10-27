@@ -31,6 +31,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
+    String savedFileName;
     String description;
     LocalDateTime createdTime;
 

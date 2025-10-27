@@ -2,6 +2,7 @@ package com.example.bookshop.EntityDto.Request;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -22,12 +23,11 @@ public class UserRequest {
 
     String firstName;
     String lastName;
-    @Size(min = 5, message = "USERNAME_SHORT")
-    String username;
+    @Email(message = "EMAIL_INVALID")
+    String email;
     @Size(min = 8, message = "PASSWORD_SHORT")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z]).*$", message = "PASSWORD_MISSING_ALPHANUMERIC")
     String password;
-    String email;
     String phoneNumber;
     LocalDate dob;
     String gender;

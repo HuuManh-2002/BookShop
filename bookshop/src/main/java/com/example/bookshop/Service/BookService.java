@@ -1,14 +1,16 @@
 package com.example.bookshop.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.bookshop.Entity.Author;
 import com.example.bookshop.Entity.Book;
@@ -37,6 +39,8 @@ public class BookService {
         @Autowired
         PublisherRepository publisherRepository;
 
+        @Autowired
+        FileStorageService fileStorageService;
         @Autowired
         BookMapper bookMapper;
 
@@ -88,7 +92,7 @@ public class BookService {
         }
 
         @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-        public BookReponse create(BookRequest bookRequest) {
+        public BookReponse create(BookRequest bookRequest, MultipartFile avatarFile) {
                 Book book = bookMapper.toBook(bookRequest);
                 Category category = categoryRepository.findById(bookRequest.getCategory_id())
                                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
@@ -99,12 +103,27 @@ public class BookService {
                 book.setAuthor(author);
                 book.setCategory(category);
                 book.setPublisher(publisher);
+
+                String savedFileName = null;
+
+                if (avatarFile != null && !avatarFile.isEmpty()) {
+                        try {
+                                savedFileName = fileStorageService.saveFile(avatarFile, "image/book");
+                        } catch (IOException e) {
+                                // Bắt IOException và ném ra AppException
+                                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                        }
+                }
+
+                if (savedFileName != null) {
+                        book.setSavedFileName(savedFileName);
+                }
                 bookRepository.save(book);
                 return bookMapper.toBookReponse(book);
         }
 
         @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-        public BookReponse update(Long id, BookUpdate bookUpdate) {
+        public BookReponse update(Long id, BookUpdate bookUpdate, MultipartFile avatarFile) {
                 Book book = bookRepository.findById(id)
                                 .orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_FOUND));
                 Category category = categoryRepository.findById(bookUpdate.getCategory_id())
@@ -121,7 +140,27 @@ public class BookService {
                 book.setPageNumber(bookUpdate.getPageNumber());
                 book.setPublishYear(bookUpdate.getPublishYear());
                 book.setDescription(bookUpdate.getDescription());
+                try {
+                        fileStorageService.deleteFile(book.getSavedFileName(), "image/book/");
 
+                } catch (IOException e) {
+                        throw new AppException(ErrorCode.DETETE_FILE_FAILED);
+                }
+
+                String savedFileName = null;
+
+                if (avatarFile != null && !avatarFile.isEmpty()) {
+                        try {
+                                savedFileName = fileStorageService.saveFile(avatarFile, "image/book/");
+                        } catch (IOException e) {
+                                // Bắt IOException và ném ra AppException
+                                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                        }
+                }
+
+                if (savedFileName != null) {
+                        book.setSavedFileName(savedFileName);
+                }
                 bookRepository.save(book);
                 return bookMapper.toBookReponse(book);
         }
@@ -130,6 +169,12 @@ public class BookService {
         public void delete(Long id) {
                 Book book = bookRepository.findById(id)
                                 .orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_FOUND));
+                try {
+                        fileStorageService.deleteFile(book.getSavedFileName(), "image/book/");
+
+                } catch (IOException e) {
+                        throw new AppException(ErrorCode.DETETE_FILE_FAILED);
+                }
                 bookRepository.delete(book);
 
         }

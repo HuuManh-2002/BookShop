@@ -83,7 +83,7 @@ public class CartItemService {
         Book book = bookRepository.findById(cartItemUpdate.getBook_id())
                 .orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_FOUND));
         if(book.getId() != cartItem.getBook().getId()){
-                throw new AppException(ErrorCode.UNCATEGORIRED_EXCEPTION);
+                throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
         }
         if (book.getQuantity() < cartItemUpdate.getQuantity()) {
             throw new AppException(ErrorCode.BOOK_ENOUGH_QUANTITY);

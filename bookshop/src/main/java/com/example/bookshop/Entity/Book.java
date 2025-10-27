@@ -34,6 +34,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
+    String savedFileName;
     int pageNumber;
     int publishYear;
     int price;

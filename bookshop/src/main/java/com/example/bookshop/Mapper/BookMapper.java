@@ -15,6 +15,7 @@ public class BookMapper {
         return BookReponse.builder()
                 .id(book.getId())
                 .name(book.getName())
+                .savedFileName(book.getSavedFileName())
                 .pageNumber(book.getPageNumber())
                 .publishYear(book.getPublishYear())
                 .description(book.getDescription())

@@ -20,7 +20,6 @@ public class UserUpdate {
 
     String firstName;
     String lastName;
-    String email;
     String phoneNumber;
     LocalDate dob;
     String gender;

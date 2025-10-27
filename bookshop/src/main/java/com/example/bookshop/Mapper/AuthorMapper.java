@@ -15,6 +15,7 @@ public class AuthorMapper {
         return AuthorReponse.builder()
                 .id(author.getId())
                 .name(author.getName())
+                .savedFileName(author.getSavedFileName())
                 .yob(author.getYob())
                 .gender(author.getGender())
                 .description(author.getDescription())

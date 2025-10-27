@@ -40,7 +40,10 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j(topic = "AuthenticationService")
 public class AuthenticationService {
     @Autowired
     UserRepository userRepository;
@@ -54,10 +57,10 @@ public class AuthenticationService {
     private static final String SIGNER_KEY = "Ybe1luuJZ5/VoPjmQqjLu7+kSo4MSKwQoiXCffxtWBmDksNV9JjimExq2Coo7cth";
 
     public AuthenticationReponse authenticate(AuthenticationRequest authenticationRequest) {
-        if (!userRepository.existsByUsername(authenticationRequest.getUsername())) {
+        if (!userRepository.existsByEmail(authenticationRequest.getEmail())) {
             throw new AppException(ErrorCode.USER_NOT_FOUND);
         }
-        User user = userRepository.findByUsername(authenticationRequest.getUsername()).get();
+        User user = userRepository.findByEmail(authenticationRequest.getEmail()).get();
         boolean isAdmin = false;
         Optional<UserRole> userRole = userroleRepository.findByUser_idAndRole_id(user.getId(), Long.valueOf(1L));
         if (userRole.isPresent()) {
@@ -74,6 +77,7 @@ public class AuthenticationService {
         authenticationReponse.setAuthenticated(authenticated);
         authenticationReponse.setToken(token);
         authenticationReponse.setAdmin(isAdmin);
+        log.info("User {} authenticated successfully", user.getEmail());
         return authenticationReponse;
     }
 
@@ -96,7 +100,7 @@ public class AuthenticationService {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getUsername())
+                .subject(user.getEmail())
                 .issuer("huumanh2002")
                 .issueTime(new Date())
                 .expirationTime(
@@ -136,6 +140,7 @@ public class AuthenticationService {
         invalidatedToken.setExpiryTime(expiryTime);
 
         invalidatedTokenRepository.save(invalidatedToken);
+        log.info("Token with JTI {} has been invalidated", jit);
 
     }
 
@@ -150,8 +155,8 @@ public class AuthenticationService {
 
         invalidatedTokenRepository.save(invalidatedToken);
 
-        var username = signedJWT.getJWTClaimsSet().getSubject();
-        var user = userRepository.findByUsername(username)
+        var email = signedJWT.getJWTClaimsSet().getSubject();
+        var user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
         boolean isAdmin = false;
         Optional<UserRole> userRole = userroleRepository.findByUser_idAndRole_id(user.getId(), Long.valueOf(1L));
@@ -164,6 +169,7 @@ public class AuthenticationService {
         authenticationReponse.setToken(token);
         authenticationReponse.setAdmin(isAdmin);
 
+        log.info("Token for user {} has been refreshed", user.getEmail());
         return authenticationReponse;
     }
 

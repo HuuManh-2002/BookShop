@@ -19,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 public class BookReponse {
     Long id;
     String name;
+    String savedFileName;
     int pageNumber;
     int publishYear;
     int price;

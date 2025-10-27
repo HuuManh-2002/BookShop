@@ -21,9 +21,9 @@ public class UserReponse {
     Long id;
     String firstName;
     String lastName;
-    String username;
-    String password;
+    String savedFileName;
     String email;
+    String password;
     String phoneNumber;
     LocalDate dob;
     String gender;

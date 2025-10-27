@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.bookshop.EntityDto.Reponse.ApiReponse;
 import com.example.bookshop.EntityDto.Reponse.UserReponse;
@@ -36,12 +38,13 @@ public class UserController {
                 .build();
     }
 
-    @PostMapping()
-    public ApiReponse<UserReponse> create(@RequestBody @Valid UserRequest userRequest) {
-
+    @PostMapping(consumes = "multipart/form-data")
+    public ApiReponse<UserReponse> create(
+            @RequestPart("userRequest") @Valid UserRequest userRequest,
+            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile) {
         return ApiReponse.<UserReponse>builder()
                 .code(1000)
-                .result(userService.create(userRequest))
+                .result(userService.create(userRequest, avatarFile))
                 .build();
     }
 
@@ -79,11 +82,12 @@ public class UserController {
                 .build();
     }
 
-    @PutMapping("/me")
-    public ApiReponse<UserReponse> updateMyInfor(@RequestBody UserUpdate userUpdate) {
+    @PutMapping(value = "/me", consumes = "multipart/form-data")
+    public ApiReponse<UserReponse> updateMyInfor(@RequestPart("userUpdate") @Valid UserUpdate userUpdate,
+            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile) {
         return ApiReponse.<UserReponse>builder()
                 .code(1000)
-                .result(userService.updateMyInfor(userUpdate))
+                .result(userService.updateMyInfor(userUpdate, avatarFile))
                 .build();
     }
 

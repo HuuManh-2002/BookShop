@@ -30,29 +30,45 @@ public class ApplicationInitConfig {
     @Bean
     ApplicationRunner applicationRunner() {
         return args -> {
-            if (userRepository.findByUsername("admin").isEmpty()) {
+            if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
+                Role adminRole = Role.builder()
+                        .name("ADMIN")
+                        .description("Quyền quản trị viên")
+                        .build();
+                Role userRole = Role.builder()
+                        .name("USER")
+                        .description("Quyền người dùng")
+                        .build();
+                roleRepository.save(adminRole);
+                roleRepository.save(userRole);
                 User user = User.builder()
-                        .username("admin")
+                        .email("admin@gmail.com")
                         .password(passwordEncoder.encode("manh2002"))
                         .firstName("Huu")
                         .lastName("Manh")
                         .created_Time(LocalDateTime.now())
                         .dob(LocalDate.of(2002, 6, 10))
-                        .email("admin@gmail.com")
                         .phoneNumber("0862083358")
                         .gender("Nam")
                         .build();
 
-                userRepository.save(user);
-                Role role = roleRepository.findById(Long.valueOf(1)).get();
 
-                UserRole user_role = UserRole.builder()
+                userRepository.save(user);
+                Role roleAdmin = roleRepository.findById(Long.valueOf(1)).get();
+                Role roleUser = roleRepository.findById(Long.valueOf(2)).get();
+
+                UserRole user_role_Admin = UserRole.builder()
                         .user(user)
-                        .role(role)
+                        .role(roleAdmin)
                         .createdTime(LocalDateTime.now())
                         .build();
-
-                userroleRepository.save(user_role);
+                UserRole user_role_User = UserRole.builder()
+                        .user(user)
+                        .role(roleUser)
+                        .createdTime(LocalDateTime.now())
+                        .build();
+                userroleRepository.save(user_role_Admin);
+                userroleRepository.save(user_role_User);
             }
         };
     }

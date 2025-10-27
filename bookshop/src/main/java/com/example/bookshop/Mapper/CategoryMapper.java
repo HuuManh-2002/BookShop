@@ -23,6 +23,7 @@ public class CategoryMapper {
     public CategoryReponse toCategoryReponse(Category category) {
         return CategoryReponse.builder()
                 .id(category.getId())
+                .savedFileName(category.getSavedFileName())
                 .name(category.getName())
                 .description(category.getDescription())
                 .createdTime(category.getCreatedTime())

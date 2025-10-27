@@ -1,5 +1,6 @@
 package com.example.bookshop.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.bookshop.Entity.Role;
 import com.example.bookshop.Entity.User;
@@ -27,6 +29,7 @@ import com.example.bookshop.Repository.UserRepository;
 import com.example.bookshop.Repository.UserRoleRepository;
 
 @Service
+
 public class UserService {
 
     @Autowired
@@ -39,6 +42,8 @@ public class UserService {
     RoleRepository roleRepository;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    FileStorageService fileStorageService;
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public List<UserReponse> getAll() {
@@ -58,9 +63,27 @@ public class UserService {
         return userMapper.toUserReponse(user);
     }
 
-    public UserReponse create(UserRequest userRequest) {
+    public UserReponse create(UserRequest userRequest, MultipartFile avatarFile) {
+        if (userRepository.existsByEmail(userRequest.getEmail())) {
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
         User user = userMapper.toUser(userRequest);
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        String savedFileName = null;
+
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            try {
+                savedFileName = fileStorageService.saveFile(avatarFile, "image/user/");
+            } catch (IOException e) {
+                // Bắt IOException và ném ra AppException
+                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+            }
+        }
+
+        if (savedFileName != null) {
+            user.setSavedFileName(savedFileName);
+        }
+
         try {
             userRepository.save(user);
             Role role = roleRepository.findById((Long.valueOf(2))).get();
@@ -71,7 +94,7 @@ public class UserService {
                     .build();
             userroleRepository.save(user_role);
         } catch (DataIntegrityViolationException exception) {
-            throw new AppException(ErrorCode.USERNAME_EXISTED);
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
         return userMapper.toUserReponse(user);
     }
@@ -83,7 +106,6 @@ public class UserService {
 
         user.setFirstName(userUpdate.getFirstName());
         user.setLastName(userUpdate.getLastName());
-        user.setEmail(userUpdate.getEmail());
         user.setDob(userUpdate.getDob());
         user.setPhoneNumber(userUpdate.getPhoneNumber());
         user.setGender(userUpdate.getGender());
@@ -106,15 +128,35 @@ public class UserService {
         return userMapper.toUserReponse(getUserformToKen());
     }
 
-    public UserReponse updateMyInfor(UserUpdate userUpdate) {
+    public UserReponse updateMyInfor(UserUpdate userUpdate, MultipartFile avatarFile) {
         User user = getUserformToKen();
         user.setFirstName(userUpdate.getFirstName());
         user.setLastName(userUpdate.getLastName());
-        user.setEmail(userUpdate.getEmail());
         user.setDob(userUpdate.getDob());
         user.setPhoneNumber(userUpdate.getPhoneNumber());
         user.setGender(userUpdate.getGender());
 
+        try {
+            fileStorageService.deleteFile(user.getSavedFileName(), "image/user/");
+
+        } catch (IOException e) {
+            throw new AppException(ErrorCode.DETETE_FILE_FAILED);
+        }
+
+        String savedFileName = null;
+
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            try {
+                savedFileName = fileStorageService.saveFile(avatarFile, "image/user/");
+            } catch (IOException e) {
+                // Bắt IOException và ném ra AppException
+                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+            }
+        }
+
+        if (savedFileName != null) {
+            user.setSavedFileName(savedFileName);
+        }
         userRepository.save(user);
 
         return userMapper.toUserReponse(user);
@@ -124,16 +166,22 @@ public class UserService {
     @Transactional
     public void deleteMyInfor() {
         User user = getUserformToKen();
+        try {
+            fileStorageService.deleteFile(user.getSavedFileName(), "image/user/");
+
+        } catch (IOException e) {
+            throw new AppException(ErrorCode.DETETE_FILE_FAILED);
+        }
         userroleRepository.deleteByUser(user);
         userRepository.delete(user);
     }
 
     public User getUserformToKen() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        if (!userRepository.existsByUsername(username)) {
+        String email = authentication.getName();
+        if (!userRepository.existsByEmail(email)) {
             throw new AppException(ErrorCode.USER_NOT_FOUND);
         }
-        return userRepository.findByUsername(username).get();
+        return userRepository.findByEmail(email).get();
     }
 }

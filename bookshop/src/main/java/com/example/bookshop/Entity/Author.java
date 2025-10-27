@@ -31,6 +31,7 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
+    String savedFileName;
     String gender;
     String description;
     int yob;

@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.bookshop.EntityDto.Reponse.ApiReponse;
 import com.example.bookshop.EntityDto.Reponse.BookReponse;
@@ -66,18 +67,23 @@ public class BookController {
     }
 
     @PostMapping()
-    public ApiReponse<BookReponse> create(@RequestBody BookRequest bookRequest) {
+    public ApiReponse<BookReponse> create(
+            @RequestPart("bookRequest") BookRequest bookRequest,
+            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile) {
         return ApiReponse.<BookReponse>builder()
                 .code(1000)
-                .result(bookService.create(bookRequest))
+                .result(bookService.create(bookRequest, avatarFile))
                 .build();
     }
 
     @PutMapping("/{id}")
-    public ApiReponse<BookReponse> update(@PathVariable Long id, @RequestBody BookUpdate bookUpdate) {
+    public ApiReponse<BookReponse> update(
+            @PathVariable("id") Long id,
+            @RequestPart("bookUpdate") BookUpdate bookUpdate,
+            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile) {
         return ApiReponse.<BookReponse>builder()
                 .code(1000)
-                .result(bookService.update(id, bookUpdate))
+                .result(bookService.update(id, bookUpdate, avatarFile))
                 .build();
     }
 
