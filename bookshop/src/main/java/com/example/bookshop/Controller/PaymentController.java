@@ -20,7 +20,7 @@ import com.example.bookshop.Service.PaymentService;
 
 @RequestMapping("/payment")
 @RestController
-public class PaymentCotroller {
+public class PaymentController {
     @Autowired
     PaymentService paymentService;
 

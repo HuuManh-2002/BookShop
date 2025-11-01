@@ -1,4 +1,4 @@
-package com.example.bookshop.EntityDto.Request;
+package com.example.bookshop.EntityDto.Reponse;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class DescriptionRequest {
-
-    String content;
+public class VNPayURLResponse {
+    String status;
+    String message;
+    String url;
 }

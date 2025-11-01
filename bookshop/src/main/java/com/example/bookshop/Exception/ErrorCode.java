@@ -9,6 +9,7 @@ import lombok.Getter;
 public enum ErrorCode {
     EMAIL_EXISTED(1001, "Email existed", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(1002, "User not found", HttpStatus.NOT_FOUND),
+    CANNOT_PAYMENT(1003, "Cannot payment for this order", HttpStatus.BAD_REQUEST),
     PASSWORD_SHORT(1004, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),
     PASSWORD_MISSING_ALPHANUMERIC(1005, "Password must contain both letters and numbers", HttpStatus.BAD_REQUEST),
     ADDRESS_NOT_FOUND(1005, "Address not found", HttpStatus.NOT_FOUND),

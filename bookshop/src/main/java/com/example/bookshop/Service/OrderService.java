@@ -14,8 +14,10 @@ import com.example.bookshop.Entity.Book;
 import com.example.bookshop.Entity.BookOrder;
 import com.example.bookshop.Entity.Order;
 import com.example.bookshop.Entity.Payment;
+import com.example.bookshop.Entity.PaymentMethodEnum;
 import com.example.bookshop.Entity.Status;
 import com.example.bookshop.Entity.StatusOrder;
+import com.example.bookshop.Entity.StatusOrderEnum;
 import com.example.bookshop.Entity.User;
 import com.example.bookshop.EntityDto.Reponse.OrderReponse;
 import com.example.bookshop.EntityDto.Request.BookOrderRequest;
@@ -94,7 +96,8 @@ public class OrderService {
 
         public List<OrderReponse> getMyOrderByStatus(Long status_id) {
                 List<OrderReponse> orderReponses = new ArrayList<>();
-                List<Order> orders = orderRepository.findByUserAndCurrentStatus(userService.getUserformToKen(), status_id);
+                List<Order> orders = orderRepository.findByUserAndCurrentStatus(userService.getUserformToKen(),
+                                status_id);
                 for (Order order : orders) {
                         orderReponses.add(orderMapper.toOrderReponse(order));
                 }
@@ -119,8 +122,17 @@ public class OrderService {
                                 .orElseThrow(() -> new AppException(ErrorCode.ADDRESS_NOT_FOUND));
                 Payment payment = paymentRepository.findById(orderRequest.getPayment_id())
                                 .orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_FOUND));
-                Status status = statusRepository.findById((long) 1)
-                                .orElseThrow(() -> new AppException(ErrorCode.STATUS_NOT_FOUND));
+                Status status = new Status();
+                if (payment.getId() == PaymentMethodEnum.COD.getId()) {
+                        status = statusRepository.findById(StatusOrderEnum.PENDING_CONFIRMATION.getId())
+                                        .orElseThrow(() -> new AppException(ErrorCode.STATUS_NOT_FOUND));
+                } else if (payment.getId() == PaymentMethodEnum.BANK_TRANFER.getId()) {
+                        status = statusRepository.findById(StatusOrderEnum.PENDING_PAYMENT.getId())
+                                        .orElseThrow(() -> new AppException(ErrorCode.STATUS_NOT_FOUND));
+
+                } else {
+                        throw new AppException(ErrorCode.PAYMENT_NOT_FOUND);
+                }
 
                 order.setUser(user);
                 order.setAddress(address);
@@ -151,23 +163,28 @@ public class OrderService {
         }
 
         @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-        public OrderReponse confirm(Long id) {
-                return updateOrder(id, "CONFIRM", "");
+        public OrderReponse progressAdmin(Long id) {
+                return updateOrder(id, "PROGRESSING", "");
         }
 
         @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-        public OrderReponse prepare(Long id) {
-                return updateOrder(id, "PREPARE", "");
+        public OrderReponse delivery(Long id) {
+                return updateOrder(id, "DELIVERING", "");
         }
 
         @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-        public OrderReponse handover(Long id) {
-                return updateOrder(id, "HANDOVER", "");
+        public OrderReponse returnBook(Long id) {
+                return updateOrder(id, "RETURN", "");
         }
 
-        @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-        public OrderReponse deliver(Long id) {
-                return updateOrder(id, "DELIVERY", "");
+        public OrderReponse progressUser(Long id) {
+                User user = userService.getUserformToKen();
+                Order orderfind = orderRepository.findById(id)
+                                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+                if (user.getId() != orderfind.getUser().getId()) {
+                        throw new AppException(ErrorCode.UNAUTHENTICATED);
+                }
+                return updateOrder(id, "PROGRESSING", "");
         }
 
         public OrderReponse complele(Long id, String description) {
@@ -177,7 +194,7 @@ public class OrderService {
                 if (user.getId() != orderfind.getUser().getId()) {
                         throw new AppException(ErrorCode.UNAUTHENTICATED);
                 }
-                return updateOrder(id, "COMPLETE", description);
+                return updateOrder(id, "COMPLETED", description);
         }
 
         public OrderReponse cancel(Long id, String description) {
@@ -187,7 +204,7 @@ public class OrderService {
                 if (user.getId() != orderfind.getUser().getId()) {
                         throw new AppException(ErrorCode.UNAUTHENTICATED);
                 }
-                return updateOrder(id, "CANCEL", description);
+                return updateOrder(id, "CANCELED", description);
         }
 
         public OrderReponse reject(Long id, String description) {
@@ -200,11 +217,6 @@ public class OrderService {
                 return updateOrder(id, "REJECT", description);
         }
 
-        @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-        public OrderReponse returnBook(Long id) {
-                return updateOrder(id, "RETURN", "");
-        }
-
         private OrderReponse updateOrder(Long id, String target, String description) {
                 Order order = orderRepository.findById(id)
                                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
@@ -212,75 +224,45 @@ public class OrderService {
                 Status status = new Status();
                 List<BookOrder> bookOrders = order.getBook_orders();
                 switch (target) {
-                        case "CONFIRM":
-                                if (order.getCurrentStatus() != 1) {
+                        case "PROGRESSING":
+                                if (order.getCurrentStatus() != StatusOrderEnum.PENDING_CONFIRMATION.getId()
+                                                && order.getCurrentStatus() != StatusOrderEnum.PENDING_PAYMENT
+                                                                .getId()) {
                                         throw new AppException(ErrorCode.UNABLE_UPDATE_ORDER);
                                 }
-                                status = statusRepository.findById(2L)
+                                status = statusRepository.findById(StatusOrderEnum.PROGRESSING.getId())
                                                 .orElseThrow(() -> new AppException(ErrorCode.STATUS_NOT_FOUND));
                                 statusOrderUpate = StatusOrder.builder()
                                                 .order(order)
                                                 .status(status)
                                                 .updateTime(LocalDateTime.now())
-                                                .description("Đơn hàng đã được xác nhận")
+                                                .description("Đơn hàng đã được xác nhận, người bán đang chuẩn bị hàng")
                                                 .build();
                                 statusOrderRepository.save(statusOrderUpate);
                                 order.setCurrentStatus(status.getId());
                                 orderRepository.save(order);
                                 break;
-                        case "PREPARE":
-                                if (order.getCurrentStatus() != 2) {
+                        case "DELIVERING":
+                                if (order.getCurrentStatus() != StatusOrderEnum.PROGRESSING.getId()) {
                                         throw new AppException(ErrorCode.UNABLE_UPDATE_ORDER);
                                 }
-                                status = statusRepository.findById(3L)
+                                status = statusRepository.findById(StatusOrderEnum.DELIVERING.getId())
                                                 .orElseThrow(() -> new AppException(ErrorCode.STATUS_NOT_FOUND));
                                 statusOrderUpate = StatusOrder.builder()
                                                 .order(order)
                                                 .status(status)
                                                 .updateTime(LocalDateTime.now())
-                                                .description("Đơn hàng đã được chuẩn bị xong")
+                                                .description("Đơn hàng đang được vận chuyển đến địa chỉ người nhận")
                                                 .build();
                                 statusOrderRepository.save(statusOrderUpate);
                                 order.setCurrentStatus(status.getId());
                                 orderRepository.save(order);
                                 break;
-                        case "HANDOVER":
-                                if (order.getCurrentStatus() != 3) {
+                        case "COMPLETED":
+                                if (order.getCurrentStatus() != StatusOrderEnum.DELIVERING.getId()) {
                                         throw new AppException(ErrorCode.UNABLE_UPDATE_ORDER);
                                 }
-                                status = statusRepository.findById(4L)
-                                                .orElseThrow(() -> new AppException(ErrorCode.STATUS_NOT_FOUND));
-                                statusOrderUpate = StatusOrder.builder()
-                                                .order(order)
-                                                .status(status)
-                                                .updateTime(LocalDateTime.now())
-                                                .description("Đơn hàng đã được bàn giao và đang trong quá trình trung chuyển")
-                                                .build();
-                                statusOrderRepository.save(statusOrderUpate);
-                                order.setCurrentStatus(status.getId());
-                                orderRepository.save(order);
-                                break;
-                        case "DELIVERY":
-                                if (order.getCurrentStatus() != 4) {
-                                        throw new AppException(ErrorCode.UNABLE_UPDATE_ORDER);
-                                }
-                                status = statusRepository.findById(5L)
-                                                .orElseThrow(() -> new AppException(ErrorCode.STATUS_NOT_FOUND));
-                                statusOrderUpate = StatusOrder.builder()
-                                                .order(order)
-                                                .status(status)
-                                                .updateTime(LocalDateTime.now())
-                                                .description("Đơn hàng đã đến kho đích và đang trên đường giao đến bạn")
-                                                .build();
-                                statusOrderRepository.save(statusOrderUpate);
-                                order.setCurrentStatus(status.getId());
-                                orderRepository.save(order);
-                                break;
-                        case "COMPLETE":
-                                if (order.getCurrentStatus() != 5) {
-                                        throw new AppException(ErrorCode.UNABLE_UPDATE_ORDER);
-                                }
-                                status = statusRepository.findById(6L)
+                                status = statusRepository.findById(StatusOrderEnum.COMPLETED.getId())
                                                 .orElseThrow(() -> new AppException(ErrorCode.STATUS_NOT_FOUND));
                                 statusOrderUpate = StatusOrder.builder()
                                                 .order(order)
@@ -297,12 +279,13 @@ public class OrderService {
                                 order.setCurrentStatus(status.getId());
                                 orderRepository.save(order);
                                 break;
-                        case "CANCEL":
-                                if (order.getCurrentStatus() != 1
-                                                && order.getCurrentStatus() != 2) {
+                        case "CANCELED":
+                                if (order.getCurrentStatus() != StatusOrderEnum.PENDING_CONFIRMATION.getId()
+                                                && order.getCurrentStatus() != StatusOrderEnum.PENDING_PAYMENT.getId()
+                                                && order.getCurrentStatus() != StatusOrderEnum.PROGRESSING.getId()) {
                                         throw new AppException(ErrorCode.UNABLE_UPDATE_ORDER);
                                 }
-                                status = statusRepository.findById(7L)
+                                status = statusRepository.findById(StatusOrderEnum.CANCELED.getId())
                                                 .orElseThrow(() -> new AppException(ErrorCode.STATUS_NOT_FOUND));
                                 statusOrderUpate = StatusOrder.builder()
                                                 .order(order)
@@ -320,10 +303,10 @@ public class OrderService {
                                 orderRepository.save(order);
                                 break;
                         case "REJECT":
-                                if (order.getCurrentStatus() != 5) {
+                                if (order.getCurrentStatus() != StatusOrderEnum.DELIVERING.getId()) {
                                         throw new AppException(ErrorCode.UNABLE_UPDATE_ORDER);
                                 }
-                                status = statusRepository.findById(8L)
+                                status = statusRepository.findById(StatusOrderEnum.REJECT.getId())
                                                 .orElseThrow(() -> new AppException(ErrorCode.STATUS_NOT_FOUND));
                                 statusOrderUpate = StatusOrder.builder()
                                                 .order(order)
@@ -336,10 +319,10 @@ public class OrderService {
                                 orderRepository.save(order);
                                 break;
                         case "RETURN":
-                                if (order.getCurrentStatus() != 8) {
+                                if (order.getCurrentStatus() != StatusOrderEnum.REJECT.getId()) {
                                         throw new AppException(ErrorCode.UNABLE_UPDATE_ORDER);
                                 }
-                                status = statusRepository.findById(9L)
+                                status = statusRepository.findById(StatusOrderEnum.RETURN.getId())
                                                 .orElseThrow(() -> new AppException(ErrorCode.STATUS_NOT_FOUND));
                                 statusOrderUpate = StatusOrder.builder()
                                                 .order(order)

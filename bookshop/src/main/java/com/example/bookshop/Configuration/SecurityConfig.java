@@ -1,5 +1,7 @@
 package com.example.bookshop.Configuration;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays; 
+import com.example.bookshop.Entity.StatusOrderEnum;
 
 @Configuration
 @EnableMethodSecurity
@@ -24,7 +26,7 @@ public class SecurityConfig {
 
     private final String[] POST_PUBLIC_ENDPOINTS = {
             "/user",
-            "/auth/**"
+            "/auth/**",
     };
     private final String[] GET_PUBLIC_ENPOINTS = {
             "/category/**",
@@ -42,7 +44,7 @@ public class SecurityConfig {
     CustomJwtDecoder customJwtDecoder; // Đảm bảo CustomJwtDecoder của bạn được định nghĩa đúng
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 // Kích hoạt và cấu hình CORS
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -63,7 +65,7 @@ public class SecurityConfig {
 
     // Bean này định nghĩa cấu hình CORS
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // Đặt nguồn gốc mà bạn muốn cho phép
         // Đảm bảo đây là URL chính xác của ứng dụng React của bạn
@@ -85,4 +87,5 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

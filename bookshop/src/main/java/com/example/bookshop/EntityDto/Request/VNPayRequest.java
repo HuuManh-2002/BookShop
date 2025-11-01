@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class DescriptionRequest {
-
-    String content;
+public class VNPayRequest {
+    Long amount;
+    Long orderId;
 }

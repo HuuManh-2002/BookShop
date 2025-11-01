@@ -80,60 +80,44 @@ public class OrderController {
                 .build();
     }
 
-    @PutMapping("/confirm/{id}")
-    public ApiReponse<OrderReponse> confirm(@PathVariable Long id) {
+    @PutMapping("/progress/{id}")
+    public ApiReponse<OrderReponse> progressAdmin(@PathVariable Long id) {
         return ApiReponse.<OrderReponse>builder()
                 .code(1000)
-                .result(orderService.confirm(id))
+                .result(orderService.progressAdmin(id))
                 .build();
     }
 
-    @PutMapping("/prepare/{id}")
-    public ApiReponse<OrderReponse> prepare(@PathVariable Long id) {
+    @PutMapping("/delivery/{id}")
+    public ApiReponse<OrderReponse> delivery(@PathVariable Long id) {
         return ApiReponse.<OrderReponse>builder()
                 .code(1000)
-                .result(orderService.prepare(id))
-                .build();
-    }
-
-    @PutMapping("/handover/{id}")
-    public ApiReponse<OrderReponse> handover(@PathVariable Long id) {
-        return ApiReponse.<OrderReponse>builder()
-                .code(1000)
-                .result(orderService.handover(id))
-                .build();
-    }
-
-    @PutMapping("/deliver/{id}")
-    public ApiReponse<OrderReponse> deliver(@PathVariable Long id) {
-        return ApiReponse.<OrderReponse>builder()
-                .code(1000)
-                .result(orderService.deliver(id))
+                .result(orderService.delivery(id))
                 .build();
     }
 
     @PutMapping("/return/{id}")
-    public ApiReponse<OrderReponse> returnBook(@PathVariable Long id) {
+    public ApiReponse<OrderReponse> reject(@PathVariable Long id) {
         return ApiReponse.<OrderReponse>builder()
                 .code(1000)
                 .result(orderService.returnBook(id))
                 .build();
     }
 
-    @PutMapping("/complete/{id}")
-    public ApiReponse<OrderReponse> complete(@PathVariable Long id,
-            @RequestBody DescriptionRequest descriptionRequest) {
+    @PutMapping("/complele/{id}")
+    public ApiReponse<OrderReponse> complele(@PathVariable Long id, @RequestBody DescriptionRequest descriptionRequest) {
         return ApiReponse.<OrderReponse>builder()
                 .code(1000)
-                .result(orderService.complele(id, descriptionRequest.getDescription()))
+                .result(orderService.complele(id, descriptionRequest.getContent()))
                 .build();
     }
+
 
     @PutMapping("/cancel/{id}")
     public ApiReponse<OrderReponse> cancel(@PathVariable Long id, @RequestBody DescriptionRequest descriptionRequest) {
         return ApiReponse.<OrderReponse>builder()
                 .code(1000)
-                .result(orderService.cancel(id, descriptionRequest.getDescription()))
+                .result(orderService.cancel(id, descriptionRequest.getContent()))
                 .build();
     }
 
@@ -141,7 +125,7 @@ public class OrderController {
     public ApiReponse<OrderReponse> reject(@PathVariable Long id, @RequestBody DescriptionRequest descriptionRequest) {
         return ApiReponse.<OrderReponse>builder()
                 .code(1000)
-                .result(orderService.reject(id, descriptionRequest.getDescription()))
+                .result(orderService.reject(id, descriptionRequest.getContent()))
                 .build();
     }
 
