@@ -2,6 +2,7 @@ package com.example.bookshop.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,6 +79,17 @@ public class BookService {
                 Category category = categoryRepository.findById(category_id)
                                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
                 List<Book> books = bookRepository.findByCategory(category);
+                List<BookReponse> bookReponses = new ArrayList<>();
+                for (Book book : books) {
+                        bookReponses.add(bookMapper.toBookReponse(book));
+                }
+                return bookReponses;
+        }
+
+        public List<BookReponse> getNewBook() {
+                List<Book> books = bookRepository.findAll();
+                Collections.sort(books, (b1, b2) -> b2.getCreatedTime().compareTo(b1.getCreatedTime()));
+                books.subList(0, 7);
                 List<BookReponse> bookReponses = new ArrayList<>();
                 for (Book book : books) {
                         bookReponses.add(bookMapper.toBookReponse(book));

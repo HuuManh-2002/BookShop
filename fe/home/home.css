@@ -1,0 +1,635 @@
+/* ==================================== */
+/* 0. CSS CHUNG (GLOBAL RESETS) */
+/* ==================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* ==================================== */
+/* 1. TOP HEADER (.top-header) */
+/* ==================================== */
+.top-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 10px 0;
+    font-size: 14px;
+}
+
+/* ==================================== */
+/* 2. MAIN HEADER (.main-header) */
+/* Chứa Logo, Search, Icons, Login/User Dropdown */
+/* ==================================== */
+.main-header {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+}
+
+/* --- Logo --- */
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #667eea;
+    text-decoration: none;
+    transition: transform 0.3s;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+/* --- Search Bar --- */
+.search-bar {
+    position: relative;
+    max-width: 500px;
+}
+
+.search-bar input {
+    border-radius: 25px;
+    padding: 10px 50px 10px 20px;
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s;
+}
+
+.search-bar input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+}
+
+.search-bar button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: #667eea;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    transition: all 0.3s;
+}
+
+.search-bar button:hover {
+    background: #764ba2;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* --- Header Icons (Cart, etc.) --- */
+.header-icons a {
+    color: #333;
+    font-size: 22px;
+    margin-left: 20px;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.header-icons a:hover {
+    color: #667eea;
+    transform: translateY(-3px);
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4757;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Login Button --- */
+.login-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 25px;
+    border-radius: 25px;
+    border: none;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* --- User Dropdown Styles (Khi đã đăng nhập) --- */
+.user-dropdown {
+    display: inline-block;
+    position: relative;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.user-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.user-info i.fa-user-circle {
+    font-size: 20px;
+}
+
+.dropdown-menu-custom {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.user-dropdown:hover .dropdown-menu-custom {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item-custom {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 14px;
+    text-align: left;
+}
+
+.dropdown-item-custom:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    padding-left: 25px;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 5px 0;
+}
+
+/* ==================================== */
+/* 3. NAVIGATION MENU (.navbar-custom) */
+/* ==================================== */
+.navbar-custom {
+    background: #f8f9fa;
+    padding: 0;
+    position: sticky;
+    z-index: 1000;
+}
+
+.navbar-custom .nav-link {
+    color: #333;
+    padding: 15px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.navbar-custom .nav-link:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+/* Hiệu ứng gạch chân động */
+.navbar-custom .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: #667eea;
+    transition: all 0.3s;
+    transform: translateX(-50%);
+}
+
+.navbar-custom .nav-link:hover::after {
+    width: 80%;
+}
+
+.navbar-custom .nav-link.active {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.navbar-custom .nav-link.active::after {
+    width: 80%;
+}
+
+/* ==================================== */
+/* 4. HERO BANNER SECTION (#home) */
+/* ==================================== */
+.hero-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 80px 0;
+    margin-bottom: 50px;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    animation: fadeInUp 1s;
+}
+
+.hero-content p {
+    font-size: 20px;
+    margin-bottom: 30px;
+    animation: fadeInUp 1.2s;
+}
+
+.hero-btn {
+    background: white;
+    color: #667eea;
+    padding: 12px 40px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+    display: inline-block;
+    animation: fadeInUp 1.4s;
+}
+
+.hero-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Hiệu ứng Animation chung cho các phần tử */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==================================== */
+/* 5. SECTIONS CHUNG (Tiêu đề, Book Cards) */
+/* Bao gồm New Books, Best Seller, Authors, Blog, Promotion, Contact */
+/* ==================================== */
+
+/* --- Tiêu đề các Section --- */
+.section-title {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 50px;
+    color: #333;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+/* Thanh gạch chân tiêu đề */
+.section-title::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+}
+
+/* --- Book Cards (Cho New Books, Best Seller) --- */
+.book-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.book-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.book-card img {
+    height: 300px;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.book-card:hover img {
+    transform: scale(1.1);
+}
+
+.book-card .card-body {
+    padding: 20px;
+}
+
+.book-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+    height: 48px;
+    overflow: hidden;
+}
+
+.book-author {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.book-price {
+    font-size: 20px;
+    color: #ff4757;
+    font-weight: bold;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.add-to-cart-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    width: 100%;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.add-to-cart-btn:hover {
+    background: #764ba2;
+    transform: scale(1.05);
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff4757;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* ==================================== */
+/* 6. CATEGORIES SECTION (#categories) */
+/* ==================================== */
+.category-section {
+    padding: 50px 0;
+}
+
+.category-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.category-card i {
+    font-size: 50px;
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.category-card h5 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* ==================================== */
+/* 7. AUTHORS, PROMOTION, BLOG, CONTACT SECTIONS */
+/* (Chủ yếu dùng style Section chung) */
+/* ==================================== */
+/* (Không có style cụ thể, sẽ sử dụng .section-title và .container) */
+
+/* ==================================== */
+/* 8. NEWSLETTER SECTION */
+/* ==================================== */
+.newsletter-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 60px 0;
+    color: white;
+    margin: 80px 0;
+}
+
+.newsletter-input {
+    border-radius: 25px;
+    padding: 15px 25px;
+    border: none;
+    width: 100%;
+}
+
+.newsletter-btn {
+    background: white;
+    color: #667eea;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.newsletter-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ==================================== */
+/* 9. FOOTER (<footer>) */
+/* ==================================== */
+footer {
+    background: #2c3e50;
+    color: white;
+    padding: 50px 0 20px;
+    margin-top: 80px;
+}
+
+.footer-title {
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #bdc3c7;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.footer-links a:hover {
+    color: white;
+    padding-left: 5px;
+}
+
+.social-icons a {
+    color: white;
+    font-size: 24px;
+    margin-right: 15px;
+    transition: all 0.3s;
+}
+
+.social-icons a:hover {
+    color: #667eea;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    border-top: 1px solid #34495e;
+    margin-top: 30px;
+    padding-top: 20px;
+    text-align: center;
+}
+
+/* ==================================== */
+/* 10. MODALS (Login/Register Modal #authModal) */
+/* ==================================== */
+.modal-content {
+    border-radius: 20px;
+    border: none;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 20px 20px 0 0;
+    border: none;
+}
+
+.modal-header .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+/* --- Form Controls --- */
+.form-control {
+    border-radius: 10px;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+}
+
+/* Cập nhật CSS cho Floating Labels (Bootstrap 5) */
+.form-floating .form-control {
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
+}
+
+/* Tăng padding phải của input trong form-floating để không che mất biểu tượng mắt */
+.form-floating .password-input {
+    padding-right: 40px !important;
+}
+
+/* Biểu tượng ẩn/hiện mật khẩu */
+.form-floating .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.password-toggle:hover {
+    color: #667eea;
+}
+
+/* --- Submit Button --- */
+.submit-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* --- Switch Link (Chuyển đổi giữa Login/Register) --- */
+.form-switch-link {
+    color: #667eea;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.form-switch-link:hover {
+    text-decoration: underline;
+}

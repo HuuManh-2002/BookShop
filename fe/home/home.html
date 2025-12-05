@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>BookStore - Cửa hàng sách trực tuyến</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="home.css" />
+    </head>
+
+    <body>
+        <!-- Top Header -->
+        <div class="top-header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <i class="fas fa-phone-alt me-2"></i>
+                        Hotline: 1900-1234
+                        <span class="ms-3"
+                            ><i class="fas fa-envelope me-2"></i>
+                            support@bookstore.vn</span
+                        >
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <i class="fas fa-truck me-2"></i> Miễn phí vận chuyển
+                        đơn hàng từ 200.000đ
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Main Header -->
+        <header class="main-header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <a
+                            href="/fe/home/home.html"
+                            class="logo"
+                            style="display: flex; align-items: center; gap: 8px"
+                        >
+                            <i class="fas fa-book-open"></i> BookStore
+                        </a>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="search-bar">
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Tìm kiếm sách, tác giả..."
+                            />
+                            <button>
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="header-icons d-inline-block">
+                            <a href="#"><i class="fas fa-heart"></i></a>
+                            <a href="#">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-badge">3</span>
+                            </a>
+                        </div>
+                        <button
+                            class="login-btn ms-3"
+                            id="loginButton"
+                            onclick="showLoginModal()"
+                        >
+                            <i class="fas fa-user me-2"></i>Đăng nhập
+                        </button>
+                        <!-- User Dropdown Menu -->
+                        <div
+                            class="user-dropdown ms-3"
+                            id="userDropdown"
+                            style="display: none"
+                        >
+                            <div class="user-info">
+                                <i class="fas fa-user-circle"></i>
+                                <span class="user-name" id="userName"></span>
+                            </div>
+                            <div class="dropdown-menu-custom">
+                                <a href="/fe/myInfo/myInfo.html" class="dropdown-item-custom">
+                                    <i class="fas fa-user me-2"></i>Thông tin cá
+                                    nhân
+                                </a>
+                                <a href="#" class="dropdown-item-custom">
+                                    <i class="fas fa-shopping-bag me-2"></i>Đơn
+                                    hàng
+                                </a>
+
+                                <a href="#" class="dropdown-item-custom">
+                                    <i class="fas fa-map-marker-alt me-2"></i
+                                    >Địa chỉ nhận hàng
+                                </a>
+
+                                <a href="#" class="dropdown-item-custom">
+                                    <i class="fas fa-key me-2"></i>Đổi mật khẩu
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a
+                                    href="#"
+                                    class="dropdown-item-custom"
+                                    onclick="logout(); return false;"
+                                >
+                                    <i class="fas fa-sign-out-alt me-2"></i>Đăng
+                                    xuất
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Navigation Menu -->
+        <nav class="navbar navbar-expand-lg navbar-custom" id="mainNav">
+            <div class="container">
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item mx-1">
+                            <a class="nav-link active" href="#home"
+                                ><i class="fas fa-home me-1"></i> Trang chủ</a
+                            >
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="#new-books"
+                                ><i class="fas fa-fire me-1"></i> Sách mới</a
+                            >
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="#best-seller"
+                                ><i class="fas fa-star me-1"></i> Bán chạy</a
+                            >
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="#categories"
+                                ><i class="fas fa-list me-1"></i> Thể loại</a
+                            >
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="#authors"
+                                ><i class="fas fa-user-edit me-1"></i> Tác
+                                giả</a
+                            >
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="#promotion"
+                                ><i class="fas fa-tag me-1"></i> Khuyến mãi</a
+                            >
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="#blog"
+                                ><i class="fas fa-blog me-1"></i> Blog</a
+                            >
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="#contact"
+                                ><i class="fas fa-phone me-1"></i> Liên hệ</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Hero Banner -->
+        <section class="hero-banner" id="home">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6 hero-content">
+                        <h1>Khám phá thế giới sách</h1>
+                        <p>Hàng ngàn đầu sách chất lượng với giá ưu đãi nhất</p>
+                        <a href="#" class="hero-btn"
+                            >Mua sắm ngay <i class="fas fa-arrow-right ms-2"></i
+                        ></a>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <i
+                            class="fas fa-book-reader"
+                            style="font-size: 200px; opacity: 0.3"
+                        ></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- New Books Section -->
+        <section class="container" id="new-books">
+            <h2 class="section-title">Sách mới</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">-25%</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">
+                                Đắc Nhân Tâm - Bí quyết thành công
+                            </h6>
+                            <p class="book-author">Dale Carnegie</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">75.000đ</span>
+                                    <span class="old-price">100.000đ</span>
+                                </div>  
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">-15%</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">
+                                Nhà Giả Kim - Hành trình tìm kiếm ước mơ
+                            </h6>
+                            <p class="book-author">Paulo Coelho</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i
+                                    class="fas fa-star-half-alt text-warning"
+                                ></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">85.000đ</span>
+                                    <span class="old-price">100.000đ</span>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1589998059171-988d887df646?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">-30%</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">
+                                Tuổi Trẻ Đáng Giá Bao Nhiêu
+                            </h6>
+                            <p class="book-author">Rosie Nguyễn</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">70.000đ</span>
+                                    <span class="old-price">100.000đ</span>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">-20%</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">
+                                7 Thói Quen Của Người Thành Đạt
+                            </h6>
+                            <p class="book-author">Stephen Covey</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="far fa-star text-warning"></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">120.000đ</span>
+                                    <span class="old-price">150.000đ</span>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Best Seller Section -->
+        <section class="container" id="best-seller">
+            <h2 class="section-title">Sách bán chạy</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">Hot</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">Thói Quen Nguyên Tử</h6>
+                            <p class="book-author">James Clear</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">149.000đ</span>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">Hot</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">Nghĩ Giàu Làm Giàu</h6>
+                            <p class="book-author">Napoleon Hill</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">95.000đ</span>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">Hot</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">
+                                Sapiens: Lược Sử Loài Người
+                            </h6>
+                            <p class="book-author">Yuval Noah Harari</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">189.000đ</span>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">Hot</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">Tâm Lý Học Về Tiền</h6>
+                            <p class="book-author">Morgan Housel</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i
+                                    class="fas fa-star-half-alt text-warning"
+                                ></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">139.000đ</span>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Categories Section -->
+        <section class="category-section" id="categories">
+            <div class="container">
+                <h2 class="section-title">Thể loại</h2>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="category-card">
+                            <i class="fas fa-graduation-cap"></i>
+                            <h5>Sách học tập</h5>
+                            <p class="text-muted">1,234 đầu sách</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="category-card">
+                            <i class="fas fa-book"></i>
+                            <h5>Văn học</h5>
+                            <p class="text-muted">2,456 đầu sách</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="category-card">
+                            <i class="fas fa-lightbulb"></i>
+                            <h5>Kỹ năng sống</h5>
+                            <p class="text-muted">987 đầu sách</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="category-card">
+                            <i class="fas fa-child"></i>
+                            <h5>Thiếu nhi</h5>
+                            <p class="text-muted">1,567 đầu sách</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="category-card">
+                            <i class="fas fa-briefcase"></i>
+                            <h5>Kinh tế</h5>
+                            <p class="text-muted">856 đầu sách</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="category-card">
+                            <i class="fas fa-heart"></i>
+                            <h5>Tâm lý - Tình cảm</h5>
+                            <p class="text-muted">743 đầu sách</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="category-card">
+                            <i class="fas fa-flask"></i>
+                            <h5>Khoa học</h5>
+                            <p class="text-muted">624 đầu sách</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="category-card">
+                            <i class="fas fa-utensils"></i>
+                            <h5>Nấu ăn</h5>
+                            <p class="text-muted">412 đầu sách</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Authors Section -->
+        <section class="container" id="authors">
+            <h2 class="section-title">Tác giả nổi bật</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <img
+                            src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400"
+                            class="card-img-top"
+                            alt="Author"
+                            style="height: 300px; object-fit: cover"
+                        />
+                        <div class="card-body text-center">
+                            <h5 class="book-title" style="height: auto">
+                                Dale Carnegie
+                            </h5>
+                            <p class="book-author">Tác giả, Diễn giả</p>
+                            <p class="text-muted small">
+                                Tác giả của "Đắc Nhân Tâm" - cuốn sách bán chạy
+                                nhất mọi thời đại về kỹ năng giao tiếp
+                            </p>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-book me-2"></i>Xem tác phẩm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <img
+                            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400"
+                            class="card-img-top"
+                            alt="Author"
+                            style="height: 300px; object-fit: cover"
+                        />
+                        <div class="card-body text-center">
+                            <h5 class="book-title" style="height: auto">
+                                Paulo Coelho
+                            </h5>
+                            <p class="book-author">Nhà văn Brazil</p>
+                            <p class="text-muted small">
+                                Tác giả "Nhà Giả Kim" - một trong những tiểu
+                                thuyết được yêu thích nhất thế giới
+                            </p>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-book me-2"></i>Xem tác phẩm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <img
+                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400"
+                            class="card-img-top"
+                            alt="Author"
+                            style="height: 300px; object-fit: cover"
+                        />
+                        <div class="card-body text-center">
+                            <h5 class="book-title" style="height: auto">
+                                Rosie Nguyễn
+                            </h5>
+                            <p class="book-author">Tác giả Việt Nam</p>
+                            <p class="text-muted small">
+                                Tác giả "Tuổi Trẻ Đáng Giá Bao Nhiêu" - cuốn
+                                sách truyền cảm hứng cho giới trẻ
+                            </p>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-book me-2"></i>Xem tác phẩm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <img
+                            src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400"
+                            class="card-img-top"
+                            alt="Author"
+                            style="height: 300px; object-fit: cover"
+                        />
+                        <div class="card-body text-center">
+                            <h5 class="book-title" style="height: auto">
+                                Yuval Noah Harari
+                            </h5>
+                            <p class="book-author">Giáo sư lịch sử</p>
+                            <p class="text-muted small">
+                                Tác giả "Sapiens" - cuốn sách về lịch sử loài
+                                người được đánh giá cao nhất
+                            </p>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-book me-2"></i>Xem tác phẩm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Promotion Section -->
+        <section class="container" id="promotion">
+            <h2 class="section-title">Khuyến mãi hot</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">-40%</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">Cà Phê Cùng Tony</h6>
+                            <p class="book-author">Tony Buổi Sáng</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="far fa-star text-warning"></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">54.000đ</span>
+                                    <span class="old-price">90.000đ</span>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">-35%</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">Muôn Kiếp Nhân Sinh</h6>
+                            <p class="book-author">Nguyên Phong</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">130.000đ</span>
+                                    <span class="old-price">200.000đ</span>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">-50%</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">
+                                Khéo Ăn Nói Sẽ Có Được Thiên Hạ
+                            </h6>
+                            <p class="book-author">Trác Nhã</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="far fa-star text-warning"></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">50.000đ</span>
+                                    <span class="old-price">100.000đ</span>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card book-card">
+                        <div class="position-relative overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=400"
+                                class="card-img-top"
+                                alt="Book"
+                            />
+                            <span class="discount-badge">-45%</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="book-title">Bí Mật Tư Duy Triệu Phú</h6>
+                            <p class="book-author">T. Harv Eker</p>
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i
+                                    class="fas fa-star-half-alt text-warning"
+                                ></i>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3"
+                            >
+                                <div>
+                                    <span class="book-price">77.000đ</span>
+                                    <span class="old-price">140.000đ</span>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm
+                                vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Blog Section -->
+        <section class="container" id="blog">
+            <h2 class="section-title">Tin tức & Blog</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card book-card">
+                        <img
+                            src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400"
+                            class="card-img-top"
+                            alt="Blog"
+                            style="height: 250px"
+                        />
+                        <div class="card-body">
+                            <h5 class="book-title" style="height: auto">
+                                10 Cuốn Sách Nên Đọc Trong Năm 2024
+                            </h5>
+                            <p class="book-author">
+                                <i class="fas fa-calendar me-2"></i>20/11/2024
+                            </p>
+                            <p class="text-muted">
+                                Khám phá danh sách 10 cuốn sách hay nhất mà bạn
+                                không nên bỏ lỡ trong năm nay...
+                            </p>
+                            <a href="#" class="btn btn-outline-primary btn-sm"
+                                >Đọc thêm <i class="fas fa-arrow-right ms-1"></i
+                            ></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card book-card">
+                        <img
+                            src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=400"
+                            class="card-img-top"
+                            alt="Blog"
+                            style="height: 250px"
+                        />
+                        <div class="card-body">
+                            <h5 class="book-title" style="height: auto">
+                                Cách Xây Dựng Thói Quen Đọc Sách
+                            </h5>
+                            <p class="book-author">
+                                <i class="fas fa-calendar me-2"></i>18/11/2024
+                            </p>
+                            <p class="text-muted">
+                                Những mẹo nhỏ giúp bạn duy trì thói quen đọc
+                                sách mỗi ngày một cách hiệu quả...
+                            </p>
+                            <a href="#" class="btn btn-outline-primary btn-sm"
+                                >Đọc thêm <i class="fas fa-arrow-right ms-1"></i
+                            ></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card book-card">
+                        <img
+                            src="https://images.unsplash.com/photo-1513001900722-370f803f498d?w=400"
+                            class="card-img-top"
+                            alt="Blog"
+                            style="height: 250px"
+                        />
+                        <div class="card-body">
+                            <h5 class="book-title" style="height: auto">
+                                Lợi Ích Tuyệt Vời Của Việc Đọc Sách
+                            </h5>
+                            <p class="book-author">
+                                <i class="fas fa-calendar me-2"></i>15/11/2024
+                            </p>
+                            <p class="text-muted">
+                                Đọc sách không chỉ giúp tăng kiến thức mà còn
+                                mang lại nhiều lợi ích sức khỏe...
+                            </p>
+                            <a href="#" class="btn btn-outline-primary btn-sm"
+                                >Đọc thêm <i class="fas fa-arrow-right ms-1"></i
+                            ></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Contact Section -->
+        <section class="container mb-5" id="contact">
+            <h2 class="section-title">Liên hệ với chúng tôi</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div
+                        class="card p-4"
+                        style="
+                            border: 2px solid #667eea;
+                            border-radius: 15px;
+                            height: 100%;
+                        "
+                    >
+                        <h4 class="mb-4">
+                            <i
+                                class="fas fa-map-marker-alt me-2"
+                                style="color: #667eea"
+                            ></i
+                            >Thông tin liên hệ
+                        </h4>
+                        <div class="mb-3">
+                            <i
+                                class="fas fa-home me-3"
+                                style="color: #667eea; width: 20px"
+                            ></i>
+                            <strong>Địa chỉ:</strong> 123 Đường ABC, Quận 1,
+                            TP.HCM
+                        </div>
+                        <div class="mb-3">
+                            <i
+                                class="fas fa-phone me-3"
+                                style="color: #667eea; width: 20px"
+                            ></i>
+                            <strong>Hotline:</strong> 1900-1234
+                        </div>
+                        <div class="mb-3">
+                            <i
+                                class="fas fa-envelope me-3"
+                                style="color: #667eea; width: 20px"
+                            ></i>
+                            <strong>Email:</strong>
+                            support@bookstore.vn
+                        </div>
+                        <div class="mb-4">
+                            <i
+                                class="fas fa-clock me-3"
+                                style="color: #667eea; width: 20px"
+                            ></i>
+                            <strong>Giờ làm việc:</strong> 8:00 - 22:00 hàng
+                            ngày
+                        </div>
+                        <div class="mt-auto">
+                            <h5 class="mb-3">Theo dõi chúng tôi</h5>
+                            <div class="social-icons">
+                                <a href="#" style="color: #667eea"
+                                    ><i class="fab fa-facebook"></i
+                                ></a>
+                                <a href="#" style="color: #667eea"
+                                    ><i class="fab fa-instagram"></i
+                                ></a>
+                                <a href="#" style="color: #667eea"
+                                    ><i class="fab fa-youtube"></i
+                                ></a>
+                                <a href="#" style="color: #667eea"
+                                    ><i class="fab fa-tiktok"></i
+                                ></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div
+                        class="card p-4"
+                        style="
+                            border: 2px solid #667eea;
+                            border-radius: 15px;
+                            height: 100%;
+                        "
+                    >
+                        <h4 class="mb-4">
+                            <i
+                                class="fas fa-paper-plane me-2"
+                                style="color: #667eea"
+                            ></i
+                            >Gửi tin nhắn
+                        </h4>
+                        <form>
+                            <div class="mb-3">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Họ và tên"
+                                    required
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    placeholder="Email"
+                                    required
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <textarea
+                                    class="form-control"
+                                    rows="5"
+                                    placeholder="Nội dung tin nhắn"
+                                    required
+                                ></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-paper-plane me-2"></i>Gửi tin
+                                nhắn
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Newsletter Section -->
+        <section class="newsletter-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h2 class="mb-3">
+                            <i class="fas fa-envelope-open-text me-3"></i>Đăng
+                            ký nhận tin
+                        </h2>
+                        <p>
+                            Nhận thông tin về sách mới, khuyến mãi đặc biệt và
+                            nhiều ưu đãi hấp dẫn
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <input
+                                type="email"
+                                class="newsletter-input me-3"
+                                placeholder="Nhập email của bạn..."
+                            />
+                            <button
+                                class="newsletter-btn"
+                                style="white-space: nowrap"
+                            >
+                                Đăng ký ngay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h5 class="footer-title">
+                            <i class="fas fa-book-open me-2"></i>BookStore
+                        </h5>
+                        <p>
+                            Nơi hội tụ tri thức, kết nối đam mê đọc sách của
+                            hàng triệu người Việt
+                        </p>
+                        <div class="social-icons mt-3">
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                            <a href="#"><i class="fab fa-tiktok"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="footer-title">Về chúng tôi</h5>
+                        <ul class="footer-links">
+                            <li><a href="#">Giới thiệu</a></li>
+                            <li><a href="#">Tuyển dụng</a></li>
+                            <li><a href="#">Chính sách bảo mật</a></li>
+                            <li><a href="#">Điều khoản sử dụng</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="footer-title">Hỗ trợ khách hàng</h5>
+                        <ul class="footer-links">
+                            <li><a href="#">Hướng dẫn mua hàng</a></li>
+                            <li><a href="#">Chính sách đổi trả</a></li>
+                            <li>
+                                <a href="#">Phương thức thanh toán</a>
+                            </li>
+                            <li><a href="#">Câu hỏi thường gặp</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="footer-title">Liên hệ</h5>
+                        <ul class="footer-links">
+                            <li>
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                123 Đường ABC, Quận 1, TP.HCM
+                            </li>
+                            <li>
+                                <i class="fas fa-phone me-2"></i>
+                                1900-1234
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope me-2"></i>
+                                support@bookstore.vn
+                            </li>
+                            <li>
+                                <i class="fas fa-clock me-2"></i> 8:00 - 22:00
+                                hàng ngày
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>
+                        &copy; 2024 BookStore. All rights reserved. Made with
+                        <i class="fas fa-heart text-danger"></i> in Vietnam
+                    </p>
+                </div>
+            </div>
+        </footer>
+        <!-- Login/Register Modal -->
+        <div class="modal fade" id="authModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle">
+                            <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                        </h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                        ></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form id="loginForm">
+                            <div class="form-floating mb-3">
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="loginEmail"
+                                    placeholder="Nhập email của bạn"
+                                    required
+                                />
+                                <label for="loginEmail">Email</label>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="position-relative form-floating">
+                                    <input
+                                        type="password"
+                                        class="form-control password-input"
+                                        id="loginPassword"
+                                        placeholder="Nhập mật khẩu"
+                                        required
+                                    />
+                                    <i
+                                        class="fas fa-eye password-toggle"
+                                        onclick="togglePassword(this)"
+                                    ></i>
+                                    <label for="loginPassword">Mật khẩu</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input
+                                    type="checkbox"
+                                    class="form-check-input"
+                                    id="rememberMe"
+                                />
+                                <label class="form-check-label" for="rememberMe"
+                                    >Ghi nhớ đăng nhập</label
+                                >
+                            </div>
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                            </button>
+                            <p class="text-center mt-3 mb-0">
+                                Chưa có tài khoản?
+                                <a
+                                    class="form-switch-link"
+                                    onclick="switchToRegister()"
+                                    >Đăng ký ngay</a
+                                >
+                            </p>
+                        </form>
+
+                        <form id="registerForm" style="display: none">
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-floating">
+                                        <input
+                                            type="text"
+                                            name="firstName"
+                                            class="form-control"
+                                            id="regFirstName"
+                                            placeholder="Họ"
+                                            required
+                                        />
+                                        <label for="regFirstName">Họ</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-floating">
+                                        <input
+                                            type="text"
+                                            name="lastName"
+                                            class="form-control"
+                                            id="regLastName"
+                                            placeholder="Tên"
+                                            required
+                                        />
+                                        <label for="regLastName">Tên</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-floating mb-2">
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="regEmail"
+                                    placeholder="Email"
+                                    required
+                                />
+                                <label for="regEmail">Email</label>
+                            </div>
+
+                            <div class="form-floating mb-2">
+                                <input
+                                    type="tel"
+                                    name="phoneNumber"
+                                    class="form-control"
+                                    id="regPhone"
+                                    placeholder="Số điện thoại"
+                                    required
+                                />
+                                <label for="regPhone">Số điện thoại</label>
+                            </div>
+
+                            <div class="mb-2">
+                                <div class="position-relative form-floating">
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        class="form-control password-input"
+                                        id="regPassword"
+                                        placeholder="Mật khẩu"
+                                        required
+                                    />
+                                    <i
+                                        class="fas fa-eye password-toggle"
+                                        onclick="togglePassword(this)"
+                                    ></i>
+                                    <label for="regPassword">Mật khẩu</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <div class="position-relative form-floating">
+                                    <input
+                                        type="password"
+                                        name="confirm-password"
+                                        class="form-control password-input"
+                                        id="regConfirmPassword"
+                                        placeholder="Nhập lại mật khẩu"
+                                        required
+                                    />
+                                    <i
+                                        class="fas fa-eye password-toggle"
+                                        onclick="togglePassword(this)"
+                                    ></i>
+                                    <label for="regConfirmPassword"
+                                        >Nhập lại mật khẩu</label
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="mb-2 form-check">
+                                <input
+                                    type="checkbox"
+                                    class="form-check-input"
+                                    id="agreeTerms"
+                                    required
+                                />
+                                <label
+                                    class="form-check-label"
+                                    for="agreeTerms"
+                                    style="font-size: 14px"
+                                >
+                                    Tôi đồng ý với
+                                    <a href="#" class="form-switch-link"
+                                        >điều khoản sử dụng</a
+                                    >
+                                </label>
+                            </div>
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-user-plus me-2"></i>Đăng ký
+                            </button>
+                            <p
+                                class="text-center mt-2 mb-0"
+                                style="font-size: 14px"
+                            >
+                                Đã có tài khoản?
+                                <a
+                                    class="form-switch-link"
+                                    onclick="switchToLogin()"
+                                    >Đăng nhập ngay</a
+                                >
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="home.js"></script>
+    </body>
+</html>

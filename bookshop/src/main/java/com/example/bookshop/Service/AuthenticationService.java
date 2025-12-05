@@ -74,6 +74,8 @@ public class AuthenticationService {
 
         String token = generateToken(user);
         AuthenticationReponse authenticationReponse = new AuthenticationReponse();
+
+        authenticationReponse.setLastName(user.getLastName());
         authenticationReponse.setAuthenticated(authenticated);
         authenticationReponse.setToken(token);
         authenticationReponse.setAdmin(isAdmin);
